@@ -225,6 +225,7 @@ def console(request):
                     get_router().handle_outgoing(outgoing)
                 else:
                     reply_form.errors.setdefault('short_description', ErrorList())
+                    reply_form.errors.setdefault('recipient', ErrorList())
                     reply_form.errors['recipient'].append("This number isn't in the system")
 
     if request.REQUEST.get('action', None) == 'search':
