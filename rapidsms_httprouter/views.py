@@ -220,9 +220,11 @@ def console(request):
             if reply_form.is_valid():
                 if Connection.objects.filter(identity=reply_form.cleaned_data['recipient']).count():
                     text = reply_form.cleaned_data['message']
-                    #conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
-                    backend, created = Backend.objects.get_or_create(name="mifos")
-                    conn, created = Connection.objects.get_or_create(backend=backend, identity=reply_form.cleaned_data['recipient'])
+                    try:
+                        conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
+                    except Connection.DoesNotExist:
+                        backend, created = Backend.objects.get_or_create(name="test")
+                        conn, created = Connection.objects.get_or_create(backend=backend, identity=reply_form.cleaned_data['recipient'])
                     outgoing = OutgoingMessage(conn, text)
                     get_router().handle_outgoing(outgoing)
                 else:
