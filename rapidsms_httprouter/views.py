@@ -16,6 +16,7 @@ from djtables import Table, Column
 from djtables.column import DateColumn
 
 from django.core.mail import send_mail
+from django.forms.util import ErrorList
 import datetime
 
 from .models import Message
