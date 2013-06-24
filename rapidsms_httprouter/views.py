@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from rapidsms.messages.outgoing import OutgoingMessage
-from rapidsms.models import Connection
+from rapidsms.models import Connection,Backend
 from djtables import Table, Column
 from djtables.column import DateColumn
 
@@ -220,7 +220,9 @@ def console(request):
             if reply_form.is_valid():
                 if Connection.objects.filter(identity=reply_form.cleaned_data['recipient']).count():
                     text = reply_form.cleaned_data['message']
-                    conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
+                    #conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
+                    backend, created = Backend.objects.get_or_create(name="mifos")
+                    conn, created = Connection.objects.get_or_create(backend=backend, identity=reply_form.cleaned_data['recipient'])
                     outgoing = OutgoingMessage(conn, text)
                     get_router().handle_outgoing(outgoing)
                 else:
