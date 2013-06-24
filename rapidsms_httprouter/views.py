@@ -218,19 +218,15 @@ def console(request):
         elif request.REQUEST['action'] == 'reply':
             reply_form = ReplyForm(request.POST)
             if reply_form.is_valid():
-                if Connection.objects.filter(identity=reply_form.cleaned_data['recipient']).count():
-                    text = reply_form.cleaned_data['message']
-                    try:
-                        conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
-                    except Connection.DoesNotExist:
-                        backend, created = Backend.objects.get_or_create(name="test")
-                        conn, created = Connection.objects.get_or_create(backend=backend, identity=reply_form.cleaned_data['recipient'])
-                    outgoing = OutgoingMessage(conn, text)
-                    get_router().handle_outgoing(outgoing)
-                else:
-                    reply_form.errors.setdefault('short_description', ErrorList())
-                    reply_form.errors.setdefault('recipient', ErrorList())
-                    reply_form.errors['recipient'].append("This number isn't in the system")
+                text = reply_form.cleaned_data['message']
+                try:
+                    conn = Connection.objects.filter(identity=reply_form.cleaned_data['recipient'])[0]
+                except Connection.DoesNotExist:
+                    backend, created = Backend.objects.get_or_create(name="test")
+                    conn, created = Connection.objects.get_or_create(backend=backend, identity=reply_form.cleaned_data['recipient'])
+                outgoing = OutgoingMessage(conn, text)
+                get_router().handle_outgoing(outgoing)
+
 
     if request.REQUEST.get('action', None) == 'search':
         # split on spaces
