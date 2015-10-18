@@ -84,6 +84,11 @@ def receive(request):
 
     # otherwise, create the message
     data = form.cleaned_data
+    try:
+        msg=data["message]
+        data["message"]=msg.rsplit("ntd")[1]
+    except IndexError:
+        pass
 
     log.debug("[receive-msg] [{0}] received".format(data.get('sender', 'no-sender')))
 
