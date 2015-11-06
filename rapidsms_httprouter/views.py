@@ -85,7 +85,7 @@ def receive(request):
     # otherwise, create the message
     data = form.cleaned_data
     try:
-        msg=data["message]
+        msg=data["message"]
         data["message"]=msg.rsplit("ntd")[1]
     except IndexError:
         pass
